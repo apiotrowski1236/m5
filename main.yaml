@@ -7,11 +7,14 @@
       import_playbook: basicVPC_basicRDS/create_rds.yaml
     - name: Use the ec2 instance to make the database table
       import_playbook: userTable/configure_dbEc2.yaml
- #   - name: Set up the secrets manager.
- #     import_playbook: basicVPC_basicRDS/create_secretManager.yaml
+    - name: Set up the secrets manager.
+      import_playbook: basicVPC_basicRDS/create_secretManager.yaml
 #    - name: Create a users table in the database.
-#      import_playbook: userTable/create_table.yaml
+ #     import_playbook: userTable/create_table.yaml
     - name: Create an autoscaling launch template with an IAM role.
       import_playbook: autoScaling/create_launchTemplate.yaml
-    - name: Create an autoscaling group
+    - name: Create elastic IPS, target group, and load balancer.
       import_playbook: autoScaling/create_loadBalancer.yaml
+    - name: Create an autoscaling group
+      import_playbook: autoScaling/create_autoScalingGroup.yaml
+    

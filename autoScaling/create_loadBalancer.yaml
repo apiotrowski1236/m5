@@ -4,28 +4,55 @@
    tasks:
    - name: Create target group!
      elb_target_group:
-       name: m5targetGroup
-       protocol: http
+       name: myM5targetGroup
+       protocol: tcp
        port: 80
+       stickiness_type: source_ip
+       target_type: instance
        vpc_id: "{{ vpc.vpc.id }}"
+       deregistration_delay_timeout: 300
        state: present
+     register: target
+   - name: Create first elastic IP for loadbalancer
+     ec2_eip:
+       region: us-east-2
+       in_vpc: yes
+       reuse_existing_ip_allowed: yes
+       tag_name: FREE
+       state: present
+       tag_name: m51stIp
+     register: firstIP
+   - name: Create second elastic IP for loadbalancer
+     ec2_eip:
+       region: us-east-2
+       in_vpc: yes
+       reuse_existing_ip_allowed: yes
+       tag_name: FREE
+       state: present
+       tag_name: m52ndIP
+     register: secondIP
    - name: Create load balancer
      elb_network_lb:
-       name: "M5ELB"
+       name: "M5ELBalancer"
        state: present
        region: us-east-2
        listeners:
-         - Protocol: TCP
-           Port : 80
-           DefaultActions:
-             - Type: forward
-               TargetGroupName: m5targetGroup
+       #  - Protocol: TCP
+        #   Port: 80
+         #  DefaultActions:
+          #   - Type: forward
+           #    TargetGroupName: m5targetGroup
          - Protocol: TLS
+           Certificates:
+             - CertificateArn: "arn:aws:acm:us-east-2:921523645122:certificate/52d2e7eb-de21-4a97-bccb-c088539b08ef"
            Port: 443
            DefaultActions:
              - Type: forward
-               TargetGroupname: m5targetGroup
+               TargetGroupName: myM5targetGroup
        state: present
-       subnets:
-         - "{{ public_subnet1.subnet.id }}"
-         - "{{ public_subnet2.subnet.id }}"
+       subnet_mappings:
+         - SubnetId: "{{ public_subnet1.subnet.id }}"
+           AllocationId: "{{ firstIP.allocation_id }}" 
+         - SubnetId: "{{ public_subnet2.subnet.id }}"
+           AllocationId: "{{ secondIP.allocation_id }}"
+     register: balancer

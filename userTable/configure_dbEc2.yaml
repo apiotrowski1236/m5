@@ -1,5 +1,5 @@
 ---
-- hosts: tag_Name_Module5_DBConnect
+- hosts: tag_Name_connect
   become: true
   user: ec2-user
   tasks:

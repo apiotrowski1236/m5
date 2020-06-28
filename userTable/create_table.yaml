@@ -1,22 +1,26 @@
 ---
- - hosts: tag_Name_Module5_DBConnect
+ - hosts: tag_Name_connect
    vars:
-     database: " {{ hostvars['localhost']['database'] }}"
+     database: "{{ hostvars['localhost']['database'] }}"
    gather_facts: no
    tasks:
     - debug:
-        msg: "{{ database }}"
+        msg: "{{database.instance.endpoint}}"
 
-    - name: Create table query
-      postgresql_query:
-        db: "{{ database.instance.endpoint }}"
-        query: CREATE TABLE users (username varchar(255) NOT NULL, password varchar(255) NOT NULL, fullname(255) NOT NULL)
-    - name: Insert a row into table. 
-      postgresql_query: 
-        db: "{{ database.instance.endpoint }}" 
-        query: insert into users values('fred', 'foo', 'fred flintstone')
-    - name: Make the image_gallery user. 
-      postgresql_query:
-        db: "{{ database.instance.endpoint }}"
-        query: CREATE USER image_gallery login password 'simple'
+    - name: Run a script to create database table & user
+      script: ../scripts/db_setup_script.sh "{{database.instance.endpoint}}"
+
+       
+#    - name: Create table query
+ #     postgresql_query:
+  #      db: "{{database.instance.endpoint}}"
+   #     query: CREATE TABLE users (username varchar(255) NOT NULL, password varchar(255) NOT NULL, fullname(255) NOT NULL)
+    #- name: Insert a row into table. 
+     # postgresql_query: 
+      #  db: "{{database.instance.endpoint}}" 
+       # query: insert into users values('fred', 'foo', 'fred flintstone')
+  #  - name: Make the image_gallery user. 
+   #   postgresql_query:
+    #    db: "{{database.instance.endpoint}}"
+     #   query: CREATE USER image_gallery login password 'simple'
     

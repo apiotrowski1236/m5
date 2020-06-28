@@ -109,6 +109,7 @@
               - 80
               - 443
             cidr_ip: 0.0.0.0/0
+      register: nginxGroup
     - name: Create m5-postgres-tag security group
       ec2_group:
         name: m5-ig-postgres-tag

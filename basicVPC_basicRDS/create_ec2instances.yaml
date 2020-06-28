@@ -19,5 +19,5 @@
         assign_public_ip: yes
         exact_count: 1
         count_tag:
-          Name: Module5_DBConnect
+          Name: connect
       register: dbEc2
