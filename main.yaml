@@ -14,4 +14,4 @@
     - name: Create an autoscaling launch template with an IAM role.
       import_playbook: autoScaling/create_launchTemplate.yaml
     - name: Create an autoscaling group
-      import_playbook: autoScaling/create_autoScalingGroup.yaml
+      import_playbook: autoScaling/create_loadBalancer.yaml

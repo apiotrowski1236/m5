@@ -4,23 +4,28 @@
    tasks:
    - name: Create target group!
      elb_target_group:
-       name: m5_targetGroup
+       name: m5targetGroup
        protocol: http
        port: 80
-       vpc_id: " {{ vpc.id }} "
+       vpc_id: "{{ vpc.vpc.id }}"
        state: present
-   - local-action:
-        module: ec2_elb_lb
-        name: "M5 ELB"
-        state: present
-        region: us-east-2
-        zones:
-          - us-east-2a
-          - us-east-2b
-        listeners:
-          - protocol: http
-          - load_balancer_port: 80
-          - instance_port: 80
-	subnets:
-	  - " {{ public_subnet1.subnet.id }} "
-          - " {{ public_subnet2.subnet.id }}"
+   - name: Create load balancer
+     elb_network_lb:
+       name: "M5ELB"
+       state: present
+       region: us-east-2
+       listeners:
+         - Protocol: TCP
+           Port : 80
+           DefaultActions:
+             - Type: forward
+               TargetGroupName: m5targetGroup
+         - Protocol: TLS
+           Port: 443
+           DefaultActions:
+             - Type: forward
+               TargetGroupname: m5targetGroup
+       state: present
+       subnets:
+         - "{{ public_subnet1.subnet.id }}"
+         - "{{ public_subnet2.subnet.id }}"
