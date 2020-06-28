@@ -1,0 +1,7 @@
+---
+all:
+  hosts:
+    ec2-3-15-178-36.us-east-2.compute.amazonaws.com:
+      ansible_user: ec2-user
+    ec2-3-19-68-32.us-east-2.compute.amazonaws.com:
+      ansible_user: ec2-user

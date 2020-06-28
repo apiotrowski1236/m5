@@ -1,0 +1,18 @@
+---
+ - hosts: localhost
+   gather_facts: no
+   tasks:
+    - name: Create an EC2 launch template
+      ec2_launch_template:
+        name: "m5_template"
+        image_id: "ami-026dea5602e368e96"
+        key_name: annieaws
+        instance_type: t2.micro
+        network_interfaces:
+        - device_index: 0
+          subnet_id: " {{ public_subnet1.subnet.id }}"
+          associate_public_ip_address: yes
+          groups: ['m5-ig-postgres-tag', 'default', 'm5-nginx-load-balanced-servers']
+        iam_instance_profile: "image-gallery-server-role"
+        user_data: "{{ lookup('file', '~/m5/scripts/ec2_startup.sh') | b64encode }}"
+      register: template

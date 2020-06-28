@@ -1,0 +1,25 @@
+---
+- hosts: tag_Name_Module5_DBConnect
+  become: true
+  user: ec2-user
+  tasks:
+    - name: Install psql
+      package:
+        name: postgresql-server
+        state: present
+
+    - name: Install python
+      package:
+        name: python3
+        state: present
+    - name: Install pip
+      package:
+        name: python-pip
+        state: present
+    - name: Install gcc
+      package:
+        name: gcc
+        state: present
+    - pip:
+        name: psycopg2-binary
+    
