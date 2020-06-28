@@ -1,6 +1,0 @@
----
- - hosts: localhost
-    interpreter_python = /usr/bin/python3
-   gather_facts: no
-   tasks:
-    - name: 
