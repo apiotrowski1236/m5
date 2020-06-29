@@ -1,0 +1,13 @@
+---
+    - name: Set up virtual private cloud.
+      import_playbook: basicVPC_basicRDS/create_vpc.yaml
+    - name: Set up ec2 instance in vpc.
+      import_playbook: basicVPC_basicRDS/create_ec2instances.yaml
+    - name: Set up rds in private subnet of vpc
+      import_playbook: basicVPC_basicRDS/create_rds.yaml
+    - name: Use the ec2 instance to make the database table
+      import_playbook: userTable/configure_dbEc2.yaml
+    - name: Set up the secrets manager.
+      import_playbook: basicVPC_basicRDS/create_secretManager.yaml
+    - name: Create a users table in the database.
+      import_playbook: userTable/create_table.yaml
